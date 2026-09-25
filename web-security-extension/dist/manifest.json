@@ -1,0 +1,51 @@
+{
+  "name": "Web Security Shield",
+  "version": "1.0.0",
+  "description": "Real-time phishing and security analysis for every link you hover over.",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icons/icon128.jpg",
+    "48": "icons/icon128.jpg",
+    "128": "icons/icon128.jpg"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "alarms",
+    "contextMenus",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Web Security Shield",
+    "default_icon": {
+      "128": "icons/icon128.jpg"
+    }
+  },
+  "options_page": "src/options/options.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["src/warning/warning.html", "assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "minimum_chrome_version": "116"
+}

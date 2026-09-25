@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Security Shield — Data & Tools Comprehensive Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --teal: #14b8a6;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--teal);
+      max-width: 700px;
+      margin: 0 auto 16px auto;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .callout {
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 35px;
+      border-top: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .callout h3 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .callout p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 40px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid rgba(56, 189, 248, 0.2);
+      padding-bottom: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(20, 184, 166, 0.15);
+      color: var(--teal);
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .field-row {
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .field-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      background: #0f172a;
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      display: inline-block;
+    }
+
+    .field-text {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .analogy-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 14px;
+    }
+
+    .analogy-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--warning);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .analogy-text {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #fde68a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+
+    th {
+      background: #0b1120;
+      color: #fff;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) { background: rgba(15, 23, 42, 0.4); }
+
+    .score-badge {
+      font-weight: 700;
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .card { background: #fff; border: 1px solid #ccc; color: #000; box-shadow: none; page-break-inside: avoid; }
+      .card-title { color: #000; }
+      .field-text { color: #333; }
+      .analogy-box { background: #fffbeb; border: 1px solid #f59e0b; }
+      .analogy-text { color: #92400e; }
+      .badge, .card-tag { border: 1px solid #999; color: #333; background: #eee; }
+      th { background: #eee; color: #000; }
+      td { color: #333; }
+      .field-code { background: #eee; color: #000; border: 1px solid #ccc; }
+      .callout { background: #f8fafc; border-left: 4px solid #0284c7; color: #000; }
+      .callout p { color: #333; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">Master Reference Manual</span>
+      <h1>Web Security Shield</h1>
+      <p class="subtitle">Complete Technical & Layman Breakdown of Every Tool, Language, Dataset, Algorithm & Rule</p>
+      <div class="meta">Manifest V3 Chrome Extension | 100% Local-First Defense | Zero-Lag Pre-Click Protection</div>
+    </div>
+
+    <div class="callout">
+      <h3>📌 Executive Summary & Purpose</h3>
+      <p>
+        <strong>Web Security Shield</strong> monitors hyperlinks across the entire internet in real time. 
+        When you hover your mouse over a link on any webpage (Twitter, Gmail, Reddit, banking sites, forums), 
+        it performs an instant, 15-millisecond threat inspection before you click. This document explains every single 
+        technical tool and data piece used to build this system, alongside intuitive real-world analogies.
+      </p>
+    </div>
+
+    <!-- Section 1 -->
+    <h2 class="section-title">1. Development Languages & Frontend Frameworks</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">TypeScript 5.3 (TS & TSX)</span>
+        <span class="card-tag">Language / Core Logic</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/**/*.ts, src/**/*.tsx, tests/**/*.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Enforces strict data contracts, type interfaces (SecurityResult, ThreatIndicator), and compile-time verification across the entire project. Prevents undefined variable errors and null reference bugs.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Standard JavaScript is like writing an essay without spell-check: a tiny typo can cause the whole program to crash while a user is browsing. TypeScript acts as an automatic spell-checker and architectural blueprint that refuses to let flawed code compile.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">An architectural blueprint inspector who checks that every beam, electrical wire, and pipe fits together precisely before construction begins, ensuring the building never collapses.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">React 18</span>
+        <span class="card-tag">UI Framework</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/popup/Popup.tsx, src/options/Options.tsx, src/warning/Warning.tsx</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Powers all user interfaces: the browser toolbar dashboard, the configuration settings screen, and the red full-screen warning page. Manages component state and efficiently updates the screen when risk scores change.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">React breaks complex web pages into modular Lego blocks. When new security findings arrive, React updates only the specific numbers or alert badges on your screen smoothly without reloading the entire window.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">The digital dashboard in a modern car: when your speed or tire pressure changes, the numbers update dynamically on the digital screen without needing to reboot the engine.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">HTML5 & Modern Glassmorphism CSS3</span>
+        <span class="card-tag">Styling & Presentation</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/popup/popup.css, src/options/options.css, src/content/security-overlay.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Renders responsive dark-themed styling, background blur effects (glassmorphism), danger color codes (Green #22C55E, Orange #F97316, Red #EF4444), and layout grids across all UI surfaces.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">HTML builds the skeleton (buttons, text boxes, headers), while CSS provides the paint, polished finish, and lighting. It ensures the security popups look clean and readable on both light and dark websites.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">HTML is the wooden studs and beams of a house; CSS is the painted drywall, warm ambient lighting, and hardwood flooring.</div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <h2 class="section-title">2. Build & Testing Infrastructure</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Vite 5 & Rollup Bundler</span>
+        <span class="card-tag">Build System</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">build.mjs, vite.config.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Transforms TypeScript and React JSX into optimized, browser-ready JavaScript bundles. Packages dependencies and optimizes assets in milliseconds.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Browsers cannot run raw TypeScript or JSX directly. Vite and Rollup act like an industrial factory that takes dozens of raw developer files and condenses them into streamlined, ready-to-run packages.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">Packing 50 separate camping tools into one lightweight, ultra-organized travel backpack.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Custom Multi-Phase Builder (build.mjs)</span>
+        <span class="card-tag">Orchestration</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">build.mjs</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Solves Chrome Manifest V3's strict architectural constraints by executing a 4-phase compilation: builds content.js as single-file IIFE, builds background.js as single-file IIFE, compiles React HTML pages with ES modules, and copies static assets.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Chrome extensions have unusual restrictions: the scripts that inspect web pages must be bundled in one specific way, while popup screens must be bundled in another. Our custom builder organizes this automatically.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A master chef coordinating a 4-course banquet so appetizers, main courses, and desserts are served at the exact temperature required for each dish.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Vitest & JSDOM Testing Suite</span>
+        <span class="card-tag">Quality Assurance</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">tests/*.test.ts (93 tests passing)</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Executes 93 unit tests simulating browser DOM interactions and verifying URL parsing, brand lookalikes, IP detection, scoring formulas, and cache lifecycles in 1.8 seconds.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Before trusting a security tool on the real web, we run 93 simulated attacks (like fake PayPal links, punycode spoofing, and malicious scripts). Vitest verifies that our code catches every single one correctly.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A flight simulator: pilots practice flying through 93 dangerous storm scenarios on the ground before carrying passengers in a real airplane.</div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <h2 class="section-title">3. Chrome Extension Architecture & APIs</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Shadow DOM (attachShadow({ mode: 'open' }))</span>
+        <span class="card-tag">CSS Isolation</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/content/security-overlay.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Encapsulates the hover security popup inside a private Shadow DOM root attached to document.body. Blocks host webpage CSS rules from distorting popup fonts or layouts, and keeps extension CSS from bleeding into the website.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Websites have thousands of their own styling rules. Without Shadow DOM, a crazy website design could make our security popup invisible, sideways, or illegible. Shadow DOM places the popup in an isolated, soundproof glass box.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A soundproof VIP booth in a noisy stadium: what happens outside cannot disturb you, and your conversation inside does not leak out.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">MutationObserver & WeakSet</span>
+        <span class="card-tag">Zero-Lag DOM Watcher</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/content/link-detector.ts, src/content/email-detector.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Watches the webpage DOM tree for newly inserted links (infinite scroll, AJAX). Uses a WeakSet to mark processed elements so elements are never re-scanned and are garbage-collected automatically when removed by the page.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Instead of constantly scanning the entire webpage every second (which would make your computer sluggish and drain your laptop battery), the extension sleeps until a new link appears, tags it with invisible ink, and remembers it with zero memory waste.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A motion-sensing security spotlight that only turns on when someone walks up to the porch, saving power the rest of the night.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">chrome.storage.local & Two-Tier Cache</span>
+        <span class="card-tag">Memory & Storage</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/utils/storage.ts, src/security/reputation-cache.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Provides two-tier caching: Tier 1 is an ultra-fast in-memory Map in RAM (500 items max); Tier 2 is disk storage via chrome.storage.local. Safe links stay cached for 30 minutes; dangerous links expire in 2 minutes.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">If you hover over the same link five times in a minute, the extension doesn't waste time re-checking it. It looks at its short-term memory note and instantly displays the cached answer in 0.1 milliseconds.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A handy sticky note on your desk where you write down frequently dialed phone numbers so you don't have to look them up in the heavy telephone directory every time.</div>
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <h2 class="section-title">4. Datasets, Dictionaries & Security Rules</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Protected Brand Database (BRAND_DATABASE)</span>
+        <span class="card-tag">Security Dataset</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/security/brand-detector.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Dataset Contents</div>
+        <div class="field-text">28 global target organizations (Google, Microsoft, Apple, PayPal, Amazon, Facebook, Chase, Wells Fargo, IRS, USPS, FedEx, etc.) mapped to all their verified, legitimate official domains.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Phishing sites try to trick you by putting 'microsoft' or 'paypal' in their web address. This dataset is our verified VIP guest list: if a site claims to be Microsoft but its real registered domain isn't on the official list, it gets flagged for impersonation.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">An airport passport control officer with a database of legitimate embassy credentials. Anyone presenting a fake or lookalike badge is detained immediately.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Levenshtein Distance Algorithm</span>
+        <span class="card-tag">Mathematical Typosquatting Matcher</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/utils/domain-utils.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Technical Duty</div>
+        <div class="field-text">Computes the edit distance between a hovered domain and protected brand names. Detects lookalikes like 'paypa1.com', 'micros0ft.com', and 'app1e.com' with similarity >= 0.7.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Scammers replace letters with similar-looking numbers (like '1' instead of 'l'). Our mathematical formula measures the exact visual and character distance, instantly spotting deliberate misspellings.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A counterfeit currency scanner at a bank that detects if a 100-dollar bill has a microscopic typo in the treasury secretary's signature.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Dangerous Schemes & Protocol Blacklist</span>
+        <span class="card-tag">Rule Set</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Exact Location in Project</div>
+        <div class="field-code">src/types/url.ts, src/security/url-analyzer.ts</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Dataset Contents</div>
+        <div class="field-text"><span class="field-code">javascript:</span> <span class="field-code">data:</span> <span class="field-code">vbscript:</span> <span class="field-code">file:</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Layman Terms Explanation</div>
+        <div class="field-text">Real web links start with https://. If a link starts with javascript: or data:, clicking it runs executable computer code right inside your browser. We immediately assign these a maximum threat score of 100/100.</div>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">🎯 Real-World Analogy</div>
+        <div class="analogy-text">A postal package with no return address that has a lit fuse sticking out of the cardboard box. The bomb squad immediately marks it as maximum danger.</div>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <h2 class="section-title">5. Multi-Factor Risk Scoring Matrix</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Detected Indicator</th>
+          <th>Score Weight</th>
+          <th>Technical Reason & Layman Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dangerous Protocol</strong> (javascript:, data:)</td>
+          <td><span class="score-badge">+100</span></td>
+          <td>Executable code scheme masquerading as a hyperlink. Immediate hazard.</td>
+        </tr>
+        <tr>
+          <td><strong>Confirmed Threat Intel Hit</strong></td>
+          <td><span class="score-badge">+100</span></td>
+          <td>Verified malicious by Google Safe Browsing or VirusTotal scanner database.</td>
+        </tr>
+        <tr>
+          <td><strong>Credential Form on Mismatched Domain</strong></td>
+          <td><span class="score-badge">+40</span></td>
+          <td>Website asks for passwords/cards while domain does not match the official brand.</td>
+        </tr>
+        <tr>
+          <td><strong>Brand Impersonation / Typosquatting</strong></td>
+          <td><span class="score-badge">+35</span></td>
+          <td>Domain closely resembles a protected brand (e.g. google-security-login.com).</td>
+        </tr>
+        <tr>
+          <td><strong>Cross-Domain Open Redirect</strong></td>
+          <td><span class="score-badge">+25</span></td>
+          <td>URL uses parameters like ?target= to secretly bounce you to an external site.</td>
+        </tr>
+        <tr>
+          <td><strong>IP Address Destination</strong></td>
+          <td><span class="score-badge">+25</span></td>
+          <td>Uses raw IP numbers (e.g. 192.168.1.1) to avoid domain registration checks.</td>
+        </tr>
+        <tr>
+          <td><strong>Punycode Homograph Spoofing</strong> (xn--)</td>
+          <td><span class="score-badge">+20</span></td>
+          <td>Uses Cyrillic/Greek alphabets to visually imitate English domain letters.</td>
+        </tr>
+        <tr>
+          <td><strong>Suspicious Top-Level Domain</strong> (.xyz, .tk)</td>
+          <td><span class="score-badge">+15</span></td>
+          <td>Uses domain endings with high historical rates of cybercrime and abuse.</td>
+        </tr>
+        <tr>
+          <td><strong>Login / Verification Path Keyword</strong></td>
+          <td><span class="score-badge">+10</span></td>
+          <td>Path contains /login or /verify. Contributes to risk only alongside other flags.</td>
+        </tr>
+        <tr>
+          <td><strong>URL Shortener Masking</strong> (bit.ly, t.co)</td>
+          <td><span class="score-badge">+10</span></td>
+          <td>Conceals true destination. Classified as UNKNOWN so users exercise caution.</td>
+        </tr>
+        <tr>
+          <td><strong>Urgency / Coercive Language</strong></td>
+          <td><span class="score-badge">+10</span></td>
+          <td>Page text shouts 'Account suspended within 24 hours!' to induce panic.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="border-left-color: var(--teal);">
+      <h3>🛡️ Privacy Guarantee</h3>
+      <p>
+        <strong>Zero Sensitive Data Stored:</strong> Web Security Shield only checks whether password or payment fields exist on a page. It <em>never</em> captures, reads, logs, or transmits your actual passwords, PINs, OTP codes, or credit card numbers. All core analysis runs 100% locally on your computer.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
