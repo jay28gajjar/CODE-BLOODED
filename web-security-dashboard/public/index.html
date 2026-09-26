@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Security Shield — Central Console & AI Session Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="brand-shield">🛡️</div>
+      <div class="brand-info">
+        <h1>Web Security Shield</h1>
+        <span class="brand-sub">Central Console & Activity Monitor</span>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <div class="connection-status" id="connectionBadge">
+        <span class="pulse-dot"></span>
+        <span id="connectionText">Extension Ready</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="btnExportJson">📥 Export JSON</button>
+      <button class="btn btn-secondary btn-sm" id="btnExportCsv">📊 Export CSV</button>
+      <button class="btn btn-danger btn-sm" id="btnClearHistory">🗑️ Clear Log</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+
+    <!-- Left / Top Stats Summary Cards -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Safety Index</span>
+          <span class="metric-icon">🛡️</span>
+        </div>
+        <div class="metric-value text-accent" id="statSafetyScore">--%</div>
+        <div class="metric-sub">Real-time web health score</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Total Links Scanned</span>
+          <span class="metric-icon">🌐</span>
+        </div>
+        <div class="metric-value" id="statTotalScans">0</div>
+        <div class="metric-sub" id="statScansSub">Live telemetry stream</div>
+      </div>
+
+      <div class="metric-card metric-danger">
+        <div class="metric-header">
+          <span class="metric-label">Threats Blocked</span>
+          <span class="metric-icon">🚨</span>
+        </div>
+        <div class="metric-value text-danger" id="statBlocked">0</div>
+        <div class="metric-sub">Pre-click dangerous traps halted</div>
+      </div>
+
+      <div class="metric-card metric-warning">
+        <div class="metric-header">
+          <span class="metric-label">Suspicious Links</span>
+          <span class="metric-icon">⚠️</span>
+        </div>
+        <div class="metric-value text-warning" id="statSuspicious">0</div>
+        <div class="metric-sub">Lookalikes & deceptive patterns</div>
+      </div>
+
+      <div class="metric-card metric-success">
+        <div class="metric-header">
+          <span class="metric-label">Clean & Safe URLs</span>
+          <span class="metric-icon">✅</span>
+        </div>
+        <div class="metric-value text-success" id="statClean">0</div>
+        <div class="metric-sub">Verified legitimate web traffic</div>
+      </div>
+    </section>
+
+    <!-- Two-Column Workspace -->
+    <div class="content-grid">
+
+      <!-- LEFT: Live Activity Stream & Telemetry -->
+      <section class="panel activity-panel">
+        <div class="panel-header">
+          <div class="panel-title-area">
+            <h2>User Web Activity & Threat Stream</h2>
+            <p>Real-time log of hyperlinks inspected, hovered, and blocked by the extension</p>
+          </div>
+          <div class="panel-controls">
+            <button class="btn btn-secondary btn-sm" id="btnRefreshActivity">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Filter by domain, URL, or keyword...">
+          </div>
+          <div class="filter-pills" id="riskFilters">
+            <button class="filter-pill active" data-risk="ALL">All (<span id="countAll">0</span>)</button>
+            <button class="filter-pill pill-danger" data-risk="HIGH">High (<span id="countHigh">0</span>)</button>
+            <button class="filter-pill pill-warning" data-risk="SUSPICIOUS">Suspicious (<span id="countSuspicious">0</span>)</button>
+            <button class="filter-pill pill-unknown" data-risk="UNKNOWN">Review (<span id="countUnknown">0</span>)</button>
+            <button class="filter-pill pill-success" data-risk="LOW">Low Risk (<span id="countLow">0</span>)</button>
+          </div>
+        </div>
+
+        <!-- Activity Table -->
+        <div class="table-container">
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th style="width: 110px;">Risk Level</th>
+                <th style="width: 80px;">Score</th>
+                <th>Domain & Target URL</th>
+                <th>Type</th>
+                <th>Detected Indicators</th>
+                <th style="width: 100px;">Time</th>
+              </tr>
+            </thead>
+            <tbody id="activityTableBody">
+              <tr>
+                <td colspan="6" class="text-center py-8 text-muted">Loading live activity telemetry...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RIGHT: AI Session Management & Extension Pairing -->
+      <aside class="sidebar-column">
+
+        <!-- Extension Pairing Card -->
+        <div class="panel card-pairing">
+          <div class="panel-header-sm">
+            <h3>🔗 Extension Pairing Portal</h3>
+            <span class="badge-status" id="pairingStatus">Active</span>
+          </div>
+          <p class="card-desc">Connect your Web Security Shield Chrome Extension to this central dashboard to stream logs and enable AI detection.</p>
+          
+          <div class="form-group">
+            <label>Dashboard Server URL</label>
+            <div class="copy-input-group">
+              <input type="text" id="dashboardUrlInput" readonly value="http://localhost:3000">
+              <button class="btn btn-primary btn-sm" id="btnCopyUrl">Copy</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>API Session Pairing Token</label>
+            <div class="copy-input-group">
+              <input type="text" id="sessionTokenInput" readonly value="Loading...">
+              <button class="btn btn-secondary btn-sm" id="btnCopyToken">Copy</button>
+              <button class="btn btn-icon btn-sm" id="btnRegenToken" title="Regenerate Token">🔄</button>
+            </div>
+            <span class="form-hint">Paste these into Extension Options &rarr; Security Dashboard.</span>
+          </div>
+        </div>
+
+        <!-- AI Provider Session & Keys Card -->
+        <div class="panel card-ai-session">
+          <div class="panel-header-sm">
+            <h3>🤖 AI Provider & API Session</h3>
+            <span class="badge-ai" id="activeAiBadge">Gemini 1.5</span>
+          </div>
+          <p class="card-desc">Insert your API key for any AI provider. The central dashboard uses this to power deep cognitive threat analysis.</p>
+
+          <form id="aiKeysForm">
+            <!-- Select AI Provider -->
+            <div class="form-group">
+              <label>Active AI Threat Provider</label>
+              <select id="selectAiProvider" class="form-select">
+                <option value="gemini">Google Gemini (Recommended — Gemini 1.5 Flash)</option>
+                <option value="openai">OpenAI (GPT-4o Mini / GPT-4o)</option>
+                <option value="anthropic">Anthropic Claude (Claude 3.5 Haiku)</option>
+                <option value="groq">Groq (Ultra-Fast Llama 3.1 8B)</option>
+                <option value="none">Disabled (Local Heuristics Only)</option>
+              </select>
+            </div>
+
+            <!-- Dynamic Model Selector -->
+            <div class="form-group" id="groupModelSelect">
+              <label>AI Model</label>
+              <select id="selectAiModel" class="form-select">
+                <!-- Dynamically populated based on provider -->
+              </select>
+            </div>
+
+            <!-- Google Gemini Key -->
+            <div class="form-group key-group" id="keyGroupGemini">
+              <label>
+                Google Gemini API Key
+                <span class="key-status" id="statusGemini">Not Configured</span>
+              </label>
+              <div class="key-input-wrapper">
+                <input type="password" id="keyGemini" placeholder="AIzaSy..." autocomplete="off">
+                <button type="button" class="btn-toggle-vis" data-target="keyGemini">👁️</button>
+              </div>
+              <span class="form-hint">Get free key from <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a></span>
+            </div>
+
+            <!-- OpenAI Key -->
+            <div class="form-group key-group" id="keyGroupOpenAI">
+              <label>
+                OpenAI API Key
+                <span class="key-status" id="statusOpenAI">Not Configured</span>
+              </label>
+              <div class="key-input-wrapper">
+                <input type="password" id="keyOpenAI" placeholder="sk-proj-..." autocomplete="off">
+                <button type="button" class="btn-toggle-vis" data-target="keyOpenAI">👁️</button>
+              </div>
+              <span class="form-hint">From <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Developer Platform</a></span>
+            </div>
+
+            <!-- Anthropic Claude Key -->
+            <div class="form-group key-group" id="keyGroupAnthropic">
+              <label>
+                Anthropic Claude API Key
+                <span class="key-status" id="statusAnthropic">Not Configured</span>
+              </label>
+              <div class="key-input-wrapper">
+                <input type="password" id="keyAnthropic" placeholder="sk-ant-..." autocomplete="off">
+                <button type="button" class="btn-toggle-vis" data-target="keyAnthropic">👁️</button>
+              </div>
+              <span class="form-hint">From <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a></span>
+            </div>
+
+            <!-- Groq Key -->
+            <div class="form-group key-group" id="keyGroupGroq">
+              <label>
+                Groq API Key
+                <span class="key-status" id="statusGroq">Not Configured</span>
+              </label>
+              <div class="key-input-wrapper">
+                <input type="password" id="keyGroq" placeholder="gsk_..." autocomplete="off">
+                <button type="button" class="btn-toggle-vis" data-target="keyGroq">👁️</button>
+              </div>
+              <span class="form-hint">From <a href="https://console.groq.com/" target="_blank">Groq Cloud Console</a></span>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="btnSaveKeys">💾 Save API Session</button>
+              <button type="button" class="btn btn-accent" id="btnTestAi">⚡ Test Live AI</button>
+            </div>
+          </form>
+
+          <!-- Live AI Test Output Box -->
+          <div class="ai-test-result" id="aiTestResult" style="display: none;">
+            <div class="test-header">
+              <span class="test-title" id="testResultTitle">AI Diagnostic Result</span>
+              <span class="test-latency" id="testResultLatency">0ms</span>
+            </div>
+            <pre class="test-output" id="testResultOutput"></pre>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Detail Modal for Threat Indicators -->
+  <div class="modal-overlay" id="detailModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Security Inspection Details</h3>
+        <button class="modal-close" id="btnModalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
